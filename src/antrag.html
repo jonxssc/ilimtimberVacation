@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ilim Timber Intranet > Zeitmanagement</title>
+    <link rel="stylesheet" type="text/css" href="css/antrag.css?v=1.0.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" sizes="180x180" href="./assets/Favicon.png">
+  </head>
+  <body>
+    <!---- Container ---->
+    <div class="outer"><div class="container">
+      <img class="cLogo" src="./assets/LogoBig.png">
+      <div class="cData">
+        <div class="cdStatus">
+          <p class="cdsTitle">Ausstehend</p>
+        </div>
+        <div class="cdUser">
+          <p class="cduText"><span class="cdutBold">Antrags Art:</span> <span id="antrag"></span></p>
+          <p class="cduText"><span class="cdutBold">Antragssteller:</span> <span id="userName"></span></p>
+          <p class="cduText cduVertretung"><span class="cdutBold">Vertretung wurde vereinbart mit:</span> <span id="vertretungName"></span></p>
+          <p class="cduText"><span class="cdutBold">Von:</span> <span id="dateVon"></span> <span class="cdutBold">Bis:</span> <span id="dateBis"></span></p>
+          <p class="cduText"><span class="cdutBold">Kommentar:</span> <span id="kommentar"></span></p>
+          <p class="cduText"><span class="cdutBold">Genehmigende Person:</span> <span id="genehmiger"></span></p>
+        </div>
+        <div class="cdEditor" style="display:none;">
+          <a class="cdeButton cdeButtonDenie" style="background:#B22D2D;">Ablehnen</a>
+          <a class="cdeButton cdeButtonAccept" style="background:#63B22D;">Annehmen</a>
+        </div>
+      </div>
+    </div></div>
+    <!---- Scripte ---->
+    <script>
+      // General
+      $('img').on('dragstart', false);
+      const antragArt = [
+        {art:'Erholungsurlaub',title:'einen neuen Erholungsurlaub'},
+        {art:'Sonderurlaub',title:'einen neuen Sonderurlaub'},
+        {art:'Zeitkorrektur',title:'eine neue Zeitkorrektur'},
+        {art:'Dienstreise',title:'eine neue Dienstreise'},
+        {art:'Zeitausgleich gewerblich',title:'einen neuen gewerblichen Zeitausgleich'},
+        {art:'Sonstiges',title:'einen neuen Sonstigen Antrag'},
+      ]
+
+      $(document).ready(function(){
+        var urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('key')){
+          var key = urlParams.get('key');
+          $.ajax({
+            url:'/node/getEntry',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify({
+              key: key,
+            }),
+          }).done(function(data) {
+            if (data.recordsets && data.recordsets.length > 0) {
+              const userData = data.recordset[0];
+              if(userData.status==0){
+                $('.cdStatus').css('background','#B22D2D');
+                $('.cdsTitle').text('Abgelehnt');
+              }else if(userData.status==1){
+                $('.cdStatus').css('background','#F7F7FC');
+                $('.cdsTitle').text('Ausstehend');
+              }else if(userData.status==2){
+                $('.cdStatus').css('background','#63B22D');
+                $('.cdsTitle').text('Angenommen');
+              }
+              $('#antrag').text(antragArt[userData.antrag_art].art);
+              $('#userName').text(userData.p_vorname+' '+userData.p_nachname);
+              if(userData.v_vorname){
+                $('#vertretungName').text(userData.v_vorname+' '+userData.v_nachname);
+              }else{
+                $('.cduVertretung').hide();
+              }
+              if(userData.antrag_art==2){
+                const start = new Date(userData.dtime_start);
+                const end = new Date(userData.dtime_end);
+                $('#dateVon').text(String(start.getUTCDate()).padStart(2,'0')+'.'+String(start.getUTCMonth()+1).padStart(2,'0')+'.'+String(start.getUTCFullYear()));
+                $('#dateBis').text(String(end.getUTCDate()).padStart(2,'0')+'.'+String(end.getUTCMonth()+1).padStart(2,'0')+'.'+String(end.getUTCFullYear()));
+              }else{
+                const start = new Date(userData.utime_start);
+                const end = new Date(userData.utime_end);
+                $('#dateVon').text(String(start.getUTCDate()).padStart(2,'0')+'.'+String(start.getUTCMonth()+1).padStart(2,'0')+'.'+String(start.getUTCFullYear())+' '+String(start.getUTCHours()).padStart(2,'0')+':'+String(start.getUTCMinutes()).padStart(2,'0'));
+                $('#dateBis').text(String(end.getUTCDate()).padStart(2,'0')+'.'+String(end.getUTCMonth()+1).padStart(2,'0')+'.'+String(end.getUTCFullYear())+' '+String(end.getUTCHours()).padStart(2,'0')+':'+String(end.getUTCMinutes()).padStart(2,'0'));
+              }
+              
+              $('#kommentar').text(userData.kommentar);
+              $('#genehmiger').text(userData.genehmiger);
+            }else{
+              console.error('No recordsets found in the data.');
+            }
+          }).fail(function(error) {
+            console.error('Error fetching data from Node.js:', error);
+          });
+        }
+        if(urlParams.has('edit_key')){
+          var logKey = urlParams.get('key');
+          var editKey = urlParams.get('edit_key');
+          $.ajax({
+            url:'/node/getEditor',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify({
+              logKey: logKey,
+              editKey: editKey,
+            }),
+          }).done(function(data) {
+            if (data.recordsets && data.recordsets.length > 0) {
+              const editorData = data.recordset[0];
+              if(editorData.edit_key=editKey){
+                $('.cdEditor').show();
+              }
+            }else{
+              console.error('No recordsets found in the data.');
+            }
+          }).fail(function(error) {
+            console.error('Error fetching data from Node.js:', error);
+          });
+        }
+      });
+
+
+      $(document).ready(function(){
+        $('.cdeButtonAccept').on('click',function(event){
+          $(this).off('click');
+          event.preventDefault();
+          var urlParams = new URLSearchParams(window.location.search);
+          var logKey = urlParams.get('key');
+          var editKey = urlParams.get('edit_key');
+          $.ajax({
+            url:'/node/acceptAntrag',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify({
+              logKey: logKey,
+              editKey: editKey,
+            }),
+            dataType:'json',
+          }).done(function(data) {
+            window.location.href = 'antrag.html?key='+logKey;
+          }).fail(function(error) {
+            console.error('Error fetching data from Node.js:', error);
+          });
+        });
+        $('.cdeButtonDenie').on('click',function(event){
+          $(this).off('click');
+          event.preventDefault();
+          var urlParams = new URLSearchParams(window.location.search);
+          var logKey = urlParams.get('key');
+          var editKey = urlParams.get('edit_key');
+          $.ajax({
+            url:'/node/denieAntrag',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify({
+              logKey: logKey,
+              editKey: editKey,
+            }),
+            dataType:'json',
+          }).done(function(data) {
+            window.location.href = 'antrag.html?key='+logKey;
+          }).fail(function(error) {
+            console.error('Error fetching data from Node.js:', error);
+          });
+        });
+      });
+    </script>
+    </script>
+  </body>
+</html>

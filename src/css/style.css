@@ -1,0 +1,186 @@
+html, body {
+  overflow-x: hidden;
+  cursor: default;
+  background-image: url(../assets/Background.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "Segoe UI";
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+/**** Container ****/
+
+.outer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 25px;
+  width: 50%;
+  height: 100%;
+}
+.container {
+  overflow-y: scroll;
+  background: #fff;
+  width: 100%;
+  height: 90%;
+  padding: 25px 0px;
+  border-radius: 25px 0px 0px 25px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #808099 #F7F7FC; 
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #808099;
+    border-radius: 0px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #F7F7FC;
+    border-radius: 0px 10px 10px 0px;
+  }
+}
+.cLogo {
+  user-select: none;
+  display: block;
+  width: 200px;
+  margin: 0px auto 20px auto;
+}
+
+
+.cForm {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 25px;
+  gap: 12px;
+}
+.cfbTitle {
+  color: #010411;
+  font-weight: 700;
+  font-size: 20px;
+  margin: 0;
+}
+.cfbCont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0px 0px 0px;
+}
+.cfbcChoose {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  user-select: none;
+  background: #F7F7FC;
+  cursor: pointer;
+  padding: 15px 12px;
+  border-radius: 15px;
+}
+.cfbccCheck {
+  border: #010411 solid 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+}
+.cfbccCheckSelected {
+  background: #63B22D;
+  border: #327C00 solid 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 100px;
+}
+.cfbccText {
+  color: #010411;
+  font-weight: 500;
+  font-size: 20px;
+  margin: 0px 0px 0px 6px;
+}
+.cfbcInputsmall {
+  user-select: none;
+  outline: none;
+  border: none;
+  background: #F7F7FC;
+  color: #010411;
+  width: 180px;
+  padding: 15px 12px;
+  border-radius: 15px;
+  font-weight: 500;
+  font-size: 20px;
+}
+.cfbcInputbig {
+  user-select: none;
+  outline: none;
+  border: none;
+  background: #F7F7FC;
+  color: #010411;
+  width: 75%;
+  padding: 15px 12px;
+  border-radius: 15px;
+  font-weight: 500;
+  font-size: 20px;
+}
+.cfbcInputsmall::placeholder, .cfbcInputbig::placeholder {
+  color: #808099;
+}
+.cfbcDate {
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  border: none;
+  background: #F7F7FC;
+  padding: 10px 12px;
+  border-radius: 15px;
+}
+.cfbcdText {
+  color: #010411;
+  font-weight: 500;
+  font-size: 18px;
+  margin: 0px 0px 6px 0px;
+}
+.cfbcdData {
+  user-select: none;
+  outline: none;
+  border: none;
+  background: #ECECF6;
+  padding: 12px 15px;
+  border-radius: 5px;
+}
+.cfbcSelect {
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  border: none;
+  background: #F7F7FC;
+  color: #010411;
+  font-weight: 500;
+  font-size: 20px;
+  width: 180px;
+  padding: 15px 12px;
+  border-radius: 15px;
+  z-index: 1;
+}
+.cfbSubmit {
+  background: #63B22D;
+  color: #fff;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  width: 180px;
+  font-weight: 600;
+  padding: 15px 12px;
+  margin: 20px 0px 0px 0px;
+  font-size: 20px;
+  border-radius: 15px;
+  transition: 0.2s;
+}
+.cfbSubmit:hover {
+  background: #1cad27;
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ilim Timber Intranet > Zeitmanagement</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css?v=1.0.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="icon" type="image/png" sizes="180x180" href="./assets/Favicon.png">
+  </head>
+  <body>
+    <!---- Container ---->
+    <div class="outer"><div class="container">
+      <img class="cLogo" src="./assets/LogoBig.png">
+      <form class="cForm" method="post" enctype="multipart/form-data">
+        <!---- Antragsart ---->
+        <div class="cfBox">
+          <h2 class="cfbTitle">Antragsart</h2>
+          <div class="cfbCont">
+            <label class="cfbcChoose">
+              <span class="cfbccCheck cfbccCheckSelected"></span>
+              <p class="cfbccText">Erholungsurlaub</p>
+              <input style="position:absolute;opacity:0;" type="radio" checked name="radio" value="0">
+            </label>
+            <label class="cfbcChoose">
+              <span class="cfbccCheck"></span>
+              <p class="cfbccText">Sonderurlaub</p>
+              <input style="position:absolute;opacity:0;" type="radio" name="radio" value="1">
+            </label>
+            <label class="cfbcChoose">
+              <span class="cfbccCheck"></span>
+              <p class="cfbccText">Zeitkorrektur</p>
+              <input style="position:absolute;opacity:0;" type="radio" name="radio" value="2">
+            </label>
+            <label class="cfbcChoose">
+              <span class="cfbccCheck"></span>
+              <p class="cfbccText">Dienstreise</p>
+              <input style="position:absolute;opacity:0;" type="radio" name="radio" value="3">
+            </label>
+            <label class="cfbcChoose">
+              <span class="cfbccCheck"></span>
+              <p class="cfbccText">Zeitausgleich gewerblich</p>
+              <input style="position:absolute;opacity:0;" type="radio" name="radio" value="4">
+            </label>
+            <label class="cfbcChoose">
+              <span class="cfbccCheck"></span>
+              <p class="cfbccText">Sonstiges</p>
+              <input style="position:absolute;opacity:0;" type="radio" name="radio" value="5">
+            </label>
+          </div>
+        </div>
+        <!---- User ---->
+        <div class="cfBox">
+          <h2 class="cfbTitle">Angaben zu Ihnen</h2>
+          <div class="cfbCont">
+            <input class="cfbcInputsmall" id="userVorname" type="text" placeholder="Vorname" required>
+            <input class="cfbcInputsmall" id="userNachname" type="text" placeholder="Nachname" required>
+            <input class="cfbcInputsmall" id="userAbteilung" type="text" placeholder="Abteilung" required>
+          </div>
+        </div>
+        <!---- Vertretung ---->
+        <div class="cfBox">
+          <h2 class="cfbTitle">Angaben zur Vertretung</h2>
+          <div class="cfbCont">
+            <input class="cfbcInputsmall" id="vertretungVorname" type="text" placeholder="Vorname">
+            <input class="cfbcInputsmall" id="vertretungNachname" type="text" placeholder="Nachname">
+          </div>
+        </div>
+        <!---- Zeitraum ---->
+        <div class="cfBox">
+          <h2 class="cfbTitle">Zeitraum</h2>
+          <div class="cfbCont cfbContDate" style="display:none;">
+            <label class="cfbcDate" for="datetimeVon">
+              <p class="cfbcdText">Beginnt am</p>
+              <input class="cfbcdData" type="date" id="dateVon">
+            </label>
+            <label class="cfbcDate" for="datetimeBis">
+              <p class="cfbcdText">Endet am</p>
+              <input class="cfbcdData" type="date" id="dateBis">
+            </label>
+          </div>
+          <div class="cfbCont cfbContDatetime">
+            <label class="cfbcDate" for="datetimeVon">
+              <p class="cfbcdText">Beginnt am</p>
+              <input class="cfbcdData" type="datetime-local" id="datetimeVon">
+            </label>
+            <label class="cfbcDate" for="datetimeBis">
+              <p class="cfbcdText">Endet am</p>
+              <input class="cfbcdData" type="datetime-local" id="datetimeBis">
+            </label>
+          </div>
+        </div>
+        <!---- Kommentar ---->
+        <div class="cfBox">
+          <h2 class="cfbTitle">Weitere Angaben</h2>
+          <div class="cfbCont">
+            <input class="cfbcInputbig" id="kommentar" type="text" placeholder="Kommentar" maxlength="250">
+          </div>
+        </div>
+        <!---- Genehmiger ---->
+        <div class="cfBox">
+          <h2 class="cfbTitle">Genehmiger</h2>
+          <div class="cfbCont">
+            <select class="cfbcSelect" id="genehmiger" name="select" required>
+              <option selected disabled hidden value="">Auswählen</option>
+            </select>
+          </div>
+        </div>
+        <!---- Einreichen ---->
+        <div class="cfBox">
+          <input class="cfbSubmit" type="submit" name="submit" placeholder="Antrag einreichen">
+        </div>
+      </form>
+    </div></div>
+    <!---- Scripte ---->
+    <script>
+      // General
+      var date_change = new Date().toISOString().slice(0, 10);
+      $('#datetimeVon').val(date_change+'T00:00');
+      $('#datetimeBis').val(date_change+'T23:59');
+      $('#dateVon').val(date_change);
+      $('#dateBis').val(date_change);
+      $('img').on('dragstart', false);
+
+      // Antragsart
+      $(document).ready(function(){
+        $('.cfbcChoose').on('click',function(){
+          $('.cfbccCheck').removeClass('cfbccCheckSelected');
+          $('.cfbccCheck').find('input').prop('checked',false);
+          $(this).find('.cfbccCheck').addClass('cfbccCheckSelected');
+          $(this).find('input').prop('checked',true);
+        });
+      });
+
+      // Zeitraum
+      $('input[type=radio][name=radio]').change(function() {
+        if (this.value == "0" || this.value == "2" || this.value == "3" || this.value == "4" || this.value == "5") {
+          $('.cfbContDate').hide();
+          $('.cfbContDatetime').show();
+        }else{
+          $('.cfbContDate').show();
+          $('.cfbContDatetime').hide();
+        }
+      });
+
+      // Genehmiger
+      $.ajax({url:'/node/genehmiger',dataType:'json'}).done(function(data) {
+        const genehmigerSelect = $('#genehmiger');
+        if (data.recordsets && data.recordsets.length > 0) {
+          data.recordsets[0].forEach(item => {
+            const option = $('<option>');
+            option.val(item.email);
+            option.text(item.name);
+            genehmigerSelect.append(option);
+          });
+        }else{
+          console.error('No recordsets found in the data.');
+        }
+      }).fail(function(error) {
+        console.error('Error fetching data from Node.js:', error);
+      });
+
+      // Einreichen
+      $(document).ready(function(){
+        $('.cfbSubmit').on('click',function(event){
+          $(this).off('click');
+          event.preventDefault();
+          $.ajax({
+            url:'/node/newAntrag',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            data: JSON.stringify({
+              antrag: $('input[name="radio"]:checked').val(),
+              userVorname: $('#userVorname').val(),
+              userNachname: $('#userNachname').val(),
+              userAbteilung: $('#userAbteilung').val(),
+              vertretungVorname: $('#vertretungVorname').val(),
+              vertretungNachname: $('#vertretungNachname').val(),
+              datetimeVon: $('#datetimeVon').val(),
+              datetimeBis: $('#datetimeBis').val(),
+              dateVon: $('#dateVon').val(),
+              dateBis: $('#dateBis').val(),
+              kommentar: $('#kommentar').val(),
+              genehmiger: $('#genehmiger').val(),
+            }),
+            dataType:'json',
+          }).done(function(data) {
+            if(data){
+              window.location.href = 'antrag.html?key='+data.log_key;
+            }
+          }).fail(function(error) {
+            console.error('Error fetching data from Node.js:', error);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
